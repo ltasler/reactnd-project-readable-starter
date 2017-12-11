@@ -1,8 +1,7 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import {getCategories, selectCategory, getPosts} from '../actions/posts';
-import {Nav, NavItem, Navbar, NavDropdown, MenuItem, Glyphicon} from 'react-bootstrap';
-import styles from '../styles/sideMenu.css'
+import {Nav, NavItem, Navbar, Col} from 'react-bootstrap';
 
 class TopMenu extends Component {
 	componentDidMount() {
@@ -25,7 +24,7 @@ class TopMenu extends Component {
 					<Navbar.Toggle/>
 			</Navbar.Header>
 				<Navbar.Collapse>
-					<Nav>
+					<Nav >
 						{categories.map((c) =>
 							<NavItem key={c.name} onClick={
 								() => {

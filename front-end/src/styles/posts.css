@@ -1,0 +1,17 @@
+.postSubtitle p {
+    font-size: 10px;
+    color: #666666;
+    margin-bottom: 0px;
+}
+
+.postSubtitle span.subtitleData {
+    color: #287c8e;
+}
+
+.postSubtitle hr {
+    margin-bottom: 10px;
+}
+
+.post-buttons {
+    margin-top: 20px;
+}

@@ -1,15 +1,23 @@
 import React, {Component} from 'react';
-import { Route } from 'react-router';
 import TopMenu from './TopMenu';
 import Posts from './Posts';
+import {Col, Grid, Row} from 'react-bootstrap';
 
 class App extends Component {
 	render() {
 		return (
-			<div>
-				<TopMenu/>
-				<Posts/>
-			</div>
+			<Grid id="appContainer">
+				<Row>
+					<TopMenu/>
+				</Row>
+				<Row>
+					<Col sm={3}/>
+					<Col sm={6}>
+					<Posts/>
+					</Col>
+					<Col sm={3}/>
+				</Row>
+			</Grid>
 		);
 	}
 }
