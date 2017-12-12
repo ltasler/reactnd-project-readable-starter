@@ -1,5 +1,5 @@
-
-import {GET_CATEGORIES, SELECT_CATEGORY, GET_POSTS} from '../actions/posts';
+import {GET_CATEGORIES, SELECT_CATEGORY, GET_POSTS, VOTE} from '../actions/posts';
+import {LOCATION_CHANGE} from 'react-router-redux';
 
 const initialselectedState = {
 	posts: [],
@@ -24,6 +24,13 @@ export function posts(state = initialselectedState, action) {
 				...state,
 				posts: action.posts
 			};
+		case VOTE:
+			return {
+				...state,
+				posts: state.posts.map(
+					(p) => p.id === action.data.id ? action.data : p
+				)
+			}
 		default:
 			return state;
 	}

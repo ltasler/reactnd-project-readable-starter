@@ -1,39 +1,43 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Panel, Row, Grid, InputGroup, Glyphicon, Button, Col} from 'react-bootstrap';
-import styles from '../styles/singlePost.css';
+import { connect } from 'react-redux';
+import {Panel, Row, Grid, InputGroup, Glyphicon, Button} from 'react-bootstrap';
+import {vote} from '../actions/posts';
+import '../styles/singlePost.css';
 
 class SinglePost extends Component {
 
 	static propTypes = {
 		showDeleted: PropTypes.bool,//optional, ker ce ne poda je isto kot da je false.. (velja za vse boole)
 		post: PropTypes.object.isRequired,
-		comments: PropTypes.array,
 		showCommentButton: PropTypes.bool
 	};
+
+	handleVote(up) {
+		this.props.vote({up: up, id: this.props.post.id});
+	}
 
 	render() {
 		let post = this.props.post;
 		let showDeleted = this.props.showDeleted;
-		let comments = this.props.comments;
 		let showCommentButton = this.props.showCommentButton ?
-			<Button className="pull-right"><Glyphicon glyph="comment"/></Button> : "";
+			<Button className="pull-right"><Glyphicon glyph="comment"/>&nbsp;{post.commentCount}</Button> : "";
 
 		if(post.deleted && !showDeleted)
 			return;
 		let subTitle =
-			<div className="postSubtitle">
+			<div className="post-subtitle">
 				<p>
 					-- Submited on&nbsp;
-					<span className="subtitleData">
+					<span className="subtitle-data">
 				{new Date(post.timestamp).toDateString()}
 				</span>
 					&nbsp;by&nbsp;
-					<span className="subtitleData">
+					<span className="subtitle-data">
 				{post.author}
 				</span>
 					&nbsp;to category:&nbsp;
-					<span className="subtitleData">
+					<span className="subtitle-data">
 					{post.category}
 				</span>
 					&nbsp;
@@ -49,8 +53,8 @@ class SinglePost extends Component {
 			<div id="postButtonWrapper" className="post-buttons">
 				<InputGroup>
 					<InputGroup.Addon>{post.voteScore}</InputGroup.Addon>
-					<Button><Glyphicon glyph="arrow-up"/></Button>
-					<Button><Glyphicon glyph="arrow-down"/></Button>
+					<Button onClick={() => this.handleVote(true)}><Glyphicon glyph="arrow-up"/></Button>
+					<Button onClick={() => this.handleVote(false)}><Glyphicon glyph="arrow-down"/></Button>
 					{showCommentButton}
 				</InputGroup>
 			</div>
@@ -71,4 +75,13 @@ class SinglePost extends Component {
 
 }
 
-export default SinglePost
+function mapDispatchToProps(dispatch) {
+	return {
+		vote: (data) => dispatch(vote(data))
+	};
+}
+
+export default connect(
+	null,
+	mapDispatchToProps
+)(SinglePost);

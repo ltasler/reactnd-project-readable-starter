@@ -3,7 +3,6 @@ import { routerReducer } from 'react-router-redux';
 import { posts } from './posts';
 
 export default combineReducers({
-	routerReducer,
 	posts
 	//TODO: spisat reducerje
 });

@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import {getCategories, selectCategory, getPosts} from '../actions/posts';
-import {Nav, NavItem, Navbar, Col} from 'react-bootstrap';
+import {Nav, NavItem, Navbar} from 'react-bootstrap';
+import { withRouter } from 'react-router';
+import '../styles/topMenu.css'
 
 class TopMenu extends Component {
 	componentDidMount() {

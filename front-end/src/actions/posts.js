@@ -4,6 +4,7 @@ import { push } from 'react-router-redux';
 export const SELECT_CATEGORY = 'SELECT_CATEGORY';
 export const GET_CATEGORIES = 'GET_CATEGORIES';
 export const GET_POSTS = 'GET_POSTS';
+export const VOTE = 'VOTE';
 
 const URL = 'http://127.0.0.1:3001';
 const HEADERS = {
@@ -18,7 +19,6 @@ export function selectCategory({category, path}) {
 			type: SELECT_CATEGORY,
 			selectCategory: category
 		});
-		dispatch(push(`/${path}`));
 	}
 }
 
@@ -43,4 +43,20 @@ export function getPosts(category) {
 				});
 		});
 	}
+}
+
+export function vote({up, id}) {
+	let url = `${URL}/posts/${id}`;
+	let s =  {
+		option: up ? 'upVote' : 'downVote'
+	};
+	return (dispatch) => {
+		axios.post(url, s, HEADERS)
+			.then((response) => {
+				dispatch({
+					type: VOTE,
+					data: response.data
+				});
+			});
+	};
 }

@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import {getPosts} from '../actions/posts';
 import SinglePost from './SinglePost';
-
+import { withRouter } from 'react-router'
 class Posts extends Component {
 	componentDidMount() {
 		this.props.getPosts(null); //dobimo začetne podatke
@@ -10,11 +10,10 @@ class Posts extends Component {
 
 	render() {
 		let posts = this.props.posts;
-		console.log(posts);
 		return (
 			<div id="postsContainer">
 				{posts.map((post) =>
-					<SinglePost post={post} showCommentButton/>
+					<SinglePost key={post.id} post={post} showCommentButton/>
 				)}
 			</div>
 		);
