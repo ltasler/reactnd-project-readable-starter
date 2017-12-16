@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-import {getPosts} from '../actions/posts';
+import {getPosts, openPost} from '../actions/posts';
 import SinglePost from './SinglePost';
-import PostsSort from './PostsSort'
+import PostsSort from './PostsSort';
+import PostDetail from './PostDetail';
 
 class Posts extends Component {
 
@@ -10,6 +11,9 @@ class Posts extends Component {
  		this.props.getPosts(null); //dobimo začetne podatke
 	}
 
+	handleOpenPostDetail = (id) => {
+		this.props.openPost(id);
+	}
 
 	render() {
 		let posts = this.props.posts;
@@ -17,8 +21,10 @@ class Posts extends Component {
 			<div id="postsContainer">
 				<PostsSort/>
 				{posts.map((post) =>
-					<SinglePost key={post.id} post={post} showCommentButton/>
+					<SinglePost key={post.id} post={post}
+					            handleOpenPostDetail={(id) => this.handleOpenPostDetail(id)}/>
 				)}
+				<PostDetail/>
 			</div>
 		);
 	}
@@ -26,13 +32,15 @@ class Posts extends Component {
 
 function mapStateToProps({posts}) {
 	return {
-		posts: posts.posts
+		posts: posts.posts,
+		openedPost: posts.openedPost
 	};
 }
 
 function mapDispatchToProps(dispatch) {
 	return {
-		getPosts: (data) => dispatch(getPosts(data))
+		getPosts: (data) => dispatch(getPosts(data)),
+		openPost: (data) => dispatch(openPost(data))
 	};
 }
 

@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {ButtonToolbar, ButtonGroup, Button} from 'react-bootstrap';
 import {sortPosts} from '../actions/posts'
 import {POST_BY_DATE_NEW ,POST_BY_DATE_OLD, POST_BY_SCORE_BAD, POST_BY_SCORE_GOOD} from '../constants/postSortConst'
-import {connect, dispatch} from 'react-redux';
+import {connect} from 'react-redux';
 
 class PostsSort extends Component {
 

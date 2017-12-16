@@ -5,6 +5,9 @@ export const GET_CATEGORIES = 'GET_CATEGORIES';
 export const GET_POSTS = 'GET_POSTS';
 export const VOTE = 'VOTE';
 export const SORT = 'SORT';
+export const OPEN_POST = 'OPEN_POST';
+export const GET_COMMENTS = 'GET_COMMENTS';
+export const CLOSE_POST = 'CLOSE_POST';
 
 const URL = 'http://127.0.0.1:3001';
 const HEADERS = {
@@ -65,5 +68,31 @@ export function sortPosts(sort) {
 	return {
 		type: SORT,
 		sort: sort
+	};
+}
+
+export function openPost(id) {
+	return {
+		type: OPEN_POST,
+		postId: id
+	};
+}
+
+export function getComments(postId) {
+	let url = `${URL}/posts/${postId}/comments`;
+	return (dispatch) => {
+		axios.get(url, HEADERS)
+			.then((response) => {
+				dispatch({
+					type: GET_COMMENTS,
+					data: response.data
+				});
+			});
+	};
+}
+
+export function closePost() {
+	return {
+		type: CLOSE_POST
 	};
 }

@@ -10,7 +10,7 @@ class SinglePost extends Component {
 	static propTypes = {
 		showDeleted: PropTypes.bool,//optional, ker ce ne poda je isto kot da je false.. (velja za vse boole)
 		post: PropTypes.object.isRequired,
-		showCommentButton: PropTypes.bool
+		handleOpenPostDetail: PropTypes.func
 	};
 
 	handleVote(up) {
@@ -20,8 +20,12 @@ class SinglePost extends Component {
 	render() {
 		let post = this.props.post;
 		let showDeleted = this.props.showDeleted;
-		let showCommentButton = this.props.showCommentButton ?
-			<Button className="pull-right"><Glyphicon glyph="comment"/>&nbsp;{post.commentCount}</Button> : "";
+		let showCommentButton = this.props.handleOpenPostDetail ?
+			<Button className="pull-right"
+			        onClick={() => this.props.handleOpenPostDetail(this.props.post.id)}>
+				<Glyphicon glyph="comment"/>
+					&nbsp;{post.commentCount}
+			</Button> : "";
 
 		if(post.deleted && !showDeleted)
 			return;
@@ -44,8 +48,11 @@ class SinglePost extends Component {
 				</p>
 				<hr/>
 			</div>
-		let title =
-			<div id="postTitleWraper">
+		let title = this.props.handleOpenPostDetail ?
+			<div id="postTitleWraper" className="post-header"
+					onClick={() => this.props.handleOpenPostDetail(this.props.post.id)}>
+				{post.title}
+			</div> : <div id="postTitleWraper">
 				{post.title}
 			</div>
 
