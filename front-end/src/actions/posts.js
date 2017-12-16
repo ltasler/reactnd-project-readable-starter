@@ -1,10 +1,10 @@
 import axios from 'axios';
-import { push } from 'react-router-redux';
 
 export const SELECT_CATEGORY = 'SELECT_CATEGORY';
 export const GET_CATEGORIES = 'GET_CATEGORIES';
 export const GET_POSTS = 'GET_POSTS';
 export const VOTE = 'VOTE';
+export const SORT = 'SORT';
 
 const URL = 'http://127.0.0.1:3001';
 const HEADERS = {
@@ -58,5 +58,12 @@ export function vote({up, id}) {
 					data: response.data
 				});
 			});
+	};
+}
+
+export function sortPosts(sort) {
+	return {
+		type: SORT,
+		sort: sort
 	};
 }

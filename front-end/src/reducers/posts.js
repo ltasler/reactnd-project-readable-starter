@@ -1,10 +1,12 @@
-import {GET_CATEGORIES, SELECT_CATEGORY, GET_POSTS, VOTE} from '../actions/posts';
-import {LOCATION_CHANGE} from 'react-router-redux';
+import {GET_CATEGORIES, SELECT_CATEGORY, GET_POSTS, VOTE, SORT} from '../actions/posts';
+import sortPosts from '../helper/sortPosts';
+import {POST_BY_DATE_NEW} from '../constants/postSortConst'
 
 const initialselectedState = {
 	posts: [],
 	selectedCategory: null,
-	categories: []
+	categories: [],
+	sortOrder: POST_BY_DATE_NEW
 };
 
 export function posts(state = initialselectedState, action) {
@@ -22,7 +24,9 @@ export function posts(state = initialselectedState, action) {
 		case GET_POSTS:
 			return {
 				...state,
-				posts: action.posts
+				posts: action.posts.sort(
+					(a,b) => sortPosts(a,b, state.sortOrder)
+				)
 			};
 		case VOTE:
 			return {
@@ -31,7 +35,16 @@ export function posts(state = initialselectedState, action) {
 					(p) => p.id === action.data.id ? action.data : p
 				)
 			}
+		case SORT:
+			return {
+				...state,
+				posts: state.posts.concat().sort(
+					(a,b) => sortPosts(a,b, action.sort)
+				),
+				sortOrder: action.sort
+			}
 		default:
 			return state;
 	}
 }
+

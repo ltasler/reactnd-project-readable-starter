@@ -2,16 +2,20 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import {getPosts} from '../actions/posts';
 import SinglePost from './SinglePost';
-import { withRouter } from 'react-router'
+import PostsSort from './PostsSort'
+
 class Posts extends Component {
+
 	componentDidMount() {
-		this.props.getPosts(null); //dobimo začetne podatke
+ 		this.props.getPosts(null); //dobimo začetne podatke
 	}
+
 
 	render() {
 		let posts = this.props.posts;
 		return (
 			<div id="postsContainer">
+				<PostsSort/>
 				{posts.map((post) =>
 					<SinglePost key={post.id} post={post} showCommentButton/>
 				)}
