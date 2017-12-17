@@ -1,7 +1,10 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {Grid, Row, Panel, Col} from 'react-bootstrap';
-import PostButtons from './PostButtons'
+import PostButtons from './PostButtons';
+import {connect} from 'react-redux';
+import {deleteComment} from '../actions/posts';
+
 class PostComment extends Component {
 
 	static propTypes = {
@@ -12,7 +15,11 @@ class PostComment extends Component {
 	};
 
 	handleVote = (up) => {
-		this.props.handleVote(up, this.props.comment.id)
+		this.props.handleVote(up, this.props.comment.id);
+	}
+
+	handleDeleteEvent = () => {
+		this.props.handleDeleteEvent(this.props.comment.id);
 	}
 
 	render() {
@@ -49,7 +56,8 @@ class PostComment extends Component {
 						</Row>
 						<Row>
 							<PostButtons handleVote={(up) => this.handleVote(up)}
-							             voteScore={this.props.comment.voteScore}/>
+							             voteScore={this.props.comment.voteScore}
+							             handleDeleteEvent={() => this.handleDeleteEvent()}/>
 						</Row>
 						</Col>
 					</Grid>
@@ -59,6 +67,13 @@ class PostComment extends Component {
 	}
 }
 
+function mapDispatchToProps(dispatch) {
+	return {
+		handleDeleteEvent: (data) => dispatch(deleteComment(data))
+	};
+}
 
-
-export default PostComment;
+export default connect(
+	null,
+	mapDispatchToProps
+)(PostComment);

@@ -1,6 +1,6 @@
 import {
 	GET_CATEGORIES, SELECT_CATEGORY, GET_POSTS, VOTE_POST, SORT, OPEN_POST, GET_COMMENTS,
-	CLOSE_POST, VOTE_COMMENT, DELETE_POST
+	CLOSE_POST, VOTE_COMMENT, DELETE_POST, DELETE_COMMENT
 } from '../actions/posts';
 import sortPosts from '../helper/sortPosts';
 import {POST_BY_DATE_NEW} from '../constants/postSortConst'
@@ -84,6 +84,24 @@ export function posts(state = initialselectedState, action) {
 					(p) => p.id === action.data.id ? action.data : p
 				),
 				openedPost: undefined
+			};
+		case DELETE_COMMENT:
+			return {
+				...state,
+				posts: state.posts.map(
+					(p) => {
+						if(p.id === action.data.parentId) {
+							p.commentCount--;
+						}
+						return p;
+					}
+				),
+				openedPost: {
+					...state.openedPost,
+					comments: state.openedPost.comments.map(
+						(c) => c.id === action.data.id ? action.data : c
+					)
+				}
 			};
 		default:
 			return state;

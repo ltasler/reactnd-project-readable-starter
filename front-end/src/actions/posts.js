@@ -10,6 +10,7 @@ export const GET_COMMENTS = 'GET_COMMENTS';
 export const CLOSE_POST = 'CLOSE_POST';
 export const VOTE_COMMENT = 'VOTE_COMMENT';
 export const DELETE_POST = 'DELETE_POST';
+export const DELETE_COMMENT = 'DELETE_COMMENT';
 
 const URL = 'http://127.0.0.1:3001';
 const HEADERS = {
@@ -120,11 +121,24 @@ export function deletePost(id) {
 	return (dispatch) => {
 		axios.delete(url, HEADERS)
 			.then((response) => {
-			console.log(response);
 			dispatch({
 				type: DELETE_POST,
 				data: response.data
 			});
 		});
 	};
+}
+
+export function deleteComment(id) {
+	let url = `${URL}/comments/${id}`;
+	return (dispatch) => {
+		axios.delete(url, HEADERS)
+			.then((response) => {
+			console.log(response);
+			dispatch({
+				type: DELETE_COMMENT,
+				data: response.data
+			});
+		});
+	}
 }
