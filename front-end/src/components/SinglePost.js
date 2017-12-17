@@ -1,34 +1,42 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import {Panel, Row, Grid, InputGroup, Glyphicon, Button} from 'react-bootstrap';
-import {vote} from '../actions/posts';
+import {Panel, Row, Grid} from 'react-bootstrap';
+import {vote, deletePost} from '../actions/posts';
 import '../styles/singlePost.css';
+import PostButtons from './PostButtons';
 
 class SinglePost extends Component {
 
 	static propTypes = {
 		showDeleted: PropTypes.bool,//optional, ker ce ne poda je isto kot da je false.. (velja za vse boole)
+		isDetail: PropTypes.bool,
 		post: PropTypes.object.isRequired,
 		handleOpenPostDetail: PropTypes.func
 	};
 
-	handleVote(up) {
+	handleVote = (up) => {
 		this.props.vote({up: up, id: this.props.post.id});
+	}
+
+	handleDeleteEvent = () => {
+		this.props.handleDeleteEvent(this.props.post.id);
 	}
 
 	render() {
 		let post = this.props.post;
 		let showDeleted = this.props.showDeleted;
-		let showCommentButton = this.props.handleOpenPostDetail ?
-			<Button className="pull-right"
-			        onClick={() => this.props.handleOpenPostDetail(this.props.post.id)}>
-				<Glyphicon glyph="comment"/>
-					&nbsp;{post.commentCount}
-			</Button> : "";
+		if((post.deleted && !showDeleted) || !post)
+			return '';
+		let postButtons = !this.props.isDetail ?
+			<PostButtons handleVote={(up) => this.handleVote(up)}
+			             voteScore={this.props.post.voteScore}
+			             handleOpenPostDetail={() => this.props.handleOpenPostDetail(this.props.post.id)}
+			             commentCount={this.props.post.commentCount}/> :
+			<PostButtons handleVote={(up) => this.handleVote(up)}
+			             voteScore={this.props.post.voteScore}
+			             handleDeleteEvent={() => this.handleDeleteEvent()}/>
 
-		if(post.deleted && !showDeleted)
-			return;
 		let subTitle =
 			<div className="post-subtitle">
 				<p>
@@ -55,16 +63,6 @@ class SinglePost extends Component {
 			</div> : <div id="postTitleWraper">
 				{post.title}
 			</div>
-
-		let buttonGroup =
-			<div id="postButtonWrapper" className="post-buttons">
-				<InputGroup>
-					<InputGroup.Addon>{post.voteScore}</InputGroup.Addon>
-					<Button onClick={() => this.handleVote(true)}><Glyphicon glyph="arrow-up"/></Button>
-					<Button onClick={() => this.handleVote(false)}><Glyphicon glyph="arrow-down"/></Button>
-					{showCommentButton}
-				</InputGroup>
-			</div>
 		return (
 			<Panel key={post.id} header={title}>
 				<Grid id="postContentWrapper" fluid>
@@ -73,7 +71,7 @@ class SinglePost extends Component {
 						{post.body}
 					</Row>
 					<Row>
-						{buttonGroup}
+						{postButtons}
 					</Row>
 				</Grid>
 			</Panel>
@@ -84,7 +82,8 @@ class SinglePost extends Component {
 
 function mapDispatchToProps(dispatch) {
 	return {
-		vote: (data) => dispatch(vote(data))
+		vote: (data) => dispatch(vote(data)),
+		handleDeleteEvent: (data) => dispatch(deletePost(data))
 	};
 }
 

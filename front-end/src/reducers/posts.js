@@ -1,6 +1,6 @@
 import {
-	GET_CATEGORIES, SELECT_CATEGORY, GET_POSTS, VOTE, SORT, OPEN_POST, GET_COMMENTS,
-	CLOSE_POST
+	GET_CATEGORIES, SELECT_CATEGORY, GET_POSTS, VOTE_POST, SORT, OPEN_POST, GET_COMMENTS,
+	CLOSE_POST, VOTE_COMMENT, DELETE_POST
 } from '../actions/posts';
 import sortPosts from '../helper/sortPosts';
 import {POST_BY_DATE_NEW} from '../constants/postSortConst'
@@ -32,7 +32,7 @@ export function posts(state = initialselectedState, action) {
 					(a,b) => sortPosts(a,b, state.sortOrder)
 				)
 			};
-		case VOTE:
+		case VOTE_POST:
 			return {
 				...state,
 				posts: state.posts.map(
@@ -66,7 +66,25 @@ export function posts(state = initialselectedState, action) {
 			return {
 				...state,
 				openedPost: undefined
-			}
+			};
+		case VOTE_COMMENT:
+			return {
+				...state,
+				openedPost: {
+					...state.openedPost,
+					comments: state.openedPost.comments.map(
+						(c) => c.id === action.data.id ? action.data : c
+					)
+				}
+			};
+		case DELETE_POST:
+			return {
+				...state,
+				posts: state.posts.map(
+					(p) => p.id === action.data.id ? action.data : p
+				),
+				openedPost: undefined
+			};
 		default:
 			return state;
 	}

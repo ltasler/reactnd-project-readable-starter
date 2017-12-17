@@ -3,11 +3,13 @@ import axios from 'axios';
 export const SELECT_CATEGORY = 'SELECT_CATEGORY';
 export const GET_CATEGORIES = 'GET_CATEGORIES';
 export const GET_POSTS = 'GET_POSTS';
-export const VOTE = 'VOTE';
+export const VOTE_POST = 'VOTE_POST';
 export const SORT = 'SORT';
 export const OPEN_POST = 'OPEN_POST';
 export const GET_COMMENTS = 'GET_COMMENTS';
 export const CLOSE_POST = 'CLOSE_POST';
+export const VOTE_COMMENT = 'VOTE_COMMENT';
+export const DELETE_POST = 'DELETE_POST';
 
 const URL = 'http://127.0.0.1:3001';
 const HEADERS = {
@@ -57,7 +59,7 @@ export function vote({up, id}) {
 		axios.post(url, s, HEADERS)
 			.then((response) => {
 				dispatch({
-					type: VOTE,
+					type: VOTE_POST,
 					data: response.data
 				});
 			});
@@ -94,5 +96,35 @@ export function getComments(postId) {
 export function closePost() {
 	return {
 		type: CLOSE_POST
+	};
+}
+
+export function voteComment({id, vote}) {
+	let url = `${URL}/comments/${id}`;
+	let s =  {
+		option: vote ? 'upVote' : 'downVote'
+	};
+	return (dispatch) => {
+		axios.post(url, s, HEADERS)
+			.then((response) => {
+				dispatch({
+					type: VOTE_COMMENT,
+					data: response.data
+				});
+			});
+	};
+}
+
+export function deletePost(id) {
+	let url = `${URL}/posts/${id}`;
+	return (dispatch) => {
+		axios.delete(url, HEADERS)
+			.then((response) => {
+			console.log(response);
+			dispatch({
+				type: DELETE_POST,
+				data: response.data
+			});
+		});
 	};
 }
