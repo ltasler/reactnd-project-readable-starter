@@ -3,13 +3,17 @@ import {connect} from 'react-redux';
 
 import {Modal, Button, Form, FormGroup, Col, FormControl, ControlLabel} from 'react-bootstrap';
 
-import {openNewPost, postNewPost} from '../actions/posts';
+import {openNewPost, postNewPost, openEditPost, postEditPost} from '../actions/posts';
 import formGroup from '../helper/formGroup';
 
 class NewPost extends Component {
 
 	handleClose = () => {
-		this.props.openNewPost(false);
+		if(this.props.isOpen)
+			this.props.openNewPost(false);
+		else {
+			this.props.openEditPost({id: undefined, open: false});
+		}
 	}
 
 	handleSubmit = (e) => {
@@ -18,11 +22,17 @@ class NewPost extends Component {
 		let title = e.target.formPostTitle.value;
 		let body = e.target.formPostBody.value;
 		let category = e.target.formPostCategory.value;
-		this.props.postNewPost({username, title, body, category});
+		if(this.props.isOpen)
+			this.props.postNewPost({username, title, body, category});
+		else if(this.props.openEditPostId) {
+			let id = this.props.openEditPostId;
+			this.props.postEditPost({id, title, body})
+		}
 	}
 
 	render() {
-		let showModal = this.props.isOpen ? true : false;
+		let post = this.props.posts.find((p) => this.props.openEditPostId === p.id);
+		let showModal = this.props.isOpen || this.props.openEditPostId ? true : false;
 		return (
 			<Modal show={showModal} onHide={() => this.handleClose()}>
 				<Modal.Header closeButton>
@@ -30,9 +40,9 @@ class NewPost extends Component {
 				</Modal.Header>
 				<Modal.Body>
 					<Form horizontal onSubmit={(e) => this.handleSubmit(e)}>
-						{formGroup('formPostUser', 'Username:', 'text', 'Your username')}
-						{formGroup('formPostTitle', 'Title:', 'text', 'Post title')}
-						{formGroup('formPostBody', 'Body:', 'textarea', 'A post text...')}
+						{formGroup('formPostUser', 'Username:', 'text', 'Your username', post ? post.author : '', post ? true : false)}
+						{formGroup('formPostTitle', 'Title:', 'text', 'Post title', post ? post.title : '')}
+						{formGroup('formPostBody', 'Body:', 'textarea', 'A post text...', post ? post.body : '')}
 						<FormGroup controlId='formPostCategory'>
 							<Col sm={2}>
 								<ControlLabel>
@@ -40,7 +50,10 @@ class NewPost extends Component {
 								</ControlLabel>
 							</Col>
 							<Col sm={10}>
-								<FormControl componentClass='select' placeholder='Select a Category'>
+								<FormControl componentClass='select'
+								             placeholder='Select a Category'
+								             defaultValue={post ? post.category : ''}
+								             disabled={post ? true : false}>
 									{this.props.categories.map(
 										(c) => <option value={c.name} key={c.name}>{c.name}</option>
 									)}
@@ -67,14 +80,18 @@ class NewPost extends Component {
 function mapStateToProps({posts}) {
 	return {
 		isOpen: posts.openNewPost,
-		categories: posts.categories
+		categories: posts.categories,
+		openEditPostId: posts.editPostId,
+		posts: posts.posts
 	};
 }
 
 function mapDispatchToProps(dispatch) {
 	return {
 		openNewPost:(data) => dispatch(openNewPost(data)),
-		postNewPost:(data) => dispatch(postNewPost(data))
+		postNewPost:(data) => dispatch(postNewPost(data)),
+		openEditPost:(data) => dispatch(openEditPost(data)),
+		postEditPost:(data) => dispatch(postEditPost(data))
 	}
 }
 

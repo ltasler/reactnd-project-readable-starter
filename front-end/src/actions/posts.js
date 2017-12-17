@@ -18,6 +18,8 @@ export const OPEN_EDIT_COMMENT = 'OPEN_EDIT_COMMENT';
 export const POST_EDIT_COMMENT = 'POST_EDIT_COMMENT';
 export const OPEN_NEW_POST = 'OPEN_NEW_POST';
 export const POST_NEW_POST = 'POST_NEW_POST';
+export const OPEN_EDIT_POST = 'OPEN_EDIT_POST'
+export const POST_EDIT_POST = 'POST_EDIT_POST';
 
 const URL = 'http://127.0.0.1:3001';
 const HEADERS = {
@@ -221,6 +223,30 @@ export function postNewPost({username, title, body, category}) {
 		axios.post(url, data, HEADERS).then((response) => {
 			dispatch({
 				type: POST_NEW_POST,
+				data: response.data
+			});
+		});
+	};
+}
+
+export function openEditPost({id, open}) {
+	return {
+		type: OPEN_EDIT_POST,
+		id,
+		open
+	}
+}
+
+export function postEditPost({id, title, body}) {
+	let url = `${URL}/posts/${id}`
+	let data = {
+		title,
+		body
+	};
+	return (dispatch) => {
+		axios.put(url, data, HEADERS).then((response) => {
+			dispatch({
+				type: POST_EDIT_POST,
 				data: response.data
 			});
 		});

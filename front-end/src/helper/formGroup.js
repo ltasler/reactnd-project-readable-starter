@@ -1,21 +1,15 @@
 import {FormControl, Col, FormGroup, ControlLabel} from 'react-bootstrap';
 import React from 'react';
 
-export default function formGroup(id, label, type, placeHolder, prevalue) {
-	let formControl = <FormControl type={type} placeholder={placeHolder}/>;
+export default function formGroup(id, label, type, placeHolder, prevalue, disabled) {
+	let formControl = <FormControl type={type} placeholder={placeHolder} defaultValue={prevalue} disabled={disabled}/>;
 	if (type === 'textarea') {
-		if(prevalue) {
 			formControl =
 				<FormControl componentClass={type}
 				             placeholder={placeHolder}
 				             style={{maxWidth: '100%'}}
-				             defaultValue={prevalue}/>
-		} else {
-			formControl =
-				<FormControl componentClass={type}
-				             placeholder={placeHolder}
-				             style={{maxWidth: '100%'}}/>
-		}
+				             defaultValue={prevalue}
+				             disabled={disabled}/>
 	}
 	return (
 		<FormGroup controlId={id}>

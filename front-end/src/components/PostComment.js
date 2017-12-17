@@ -4,7 +4,6 @@ import {Grid, Row, Panel, Col, Form, FormGroup, Button} from 'react-bootstrap';
 import PostButtons from './PostButtons';
 import {connect} from 'react-redux';
 import {deleteComment, openEditComment, postEditComment} from '../actions/posts';
-import NewComment from './NewComment';
 import formGroup from '../helper/formGroup';
 
 class PostComment extends Component {

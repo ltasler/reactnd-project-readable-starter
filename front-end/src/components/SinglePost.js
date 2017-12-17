@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {Panel, Row, Grid} from 'react-bootstrap';
-import {vote, deletePost} from '../actions/posts';
+import {vote, deletePost, openEditPost} from '../actions/posts';
 import '../styles/singlePost.css';
 import PostButtons from './PostButtons';
 
@@ -12,7 +12,7 @@ class SinglePost extends Component {
 		showDeleted: PropTypes.bool,//optional, ker ce ne poda je isto kot da je false.. (velja za vse boole)
 		isDetail: PropTypes.bool,
 		post: PropTypes.object.isRequired,
-		handleOpenPostDetail: PropTypes.func
+		handleOpenPostDetail: PropTypes.func,
 	};
 
 	handleVote = (up) => {
@@ -21,6 +21,12 @@ class SinglePost extends Component {
 
 	handleDeleteEvent = () => {
 		this.props.handleDeleteEvent(this.props.post.id);
+	}
+
+	handleEditEvent = () => {
+		let id = this.props.post.id;
+		let open = true;
+		this.props.openEditPost({id, open});
 	}
 
 	render() {
@@ -35,7 +41,8 @@ class SinglePost extends Component {
 			             commentCount={this.props.post.commentCount}/> :
 			<PostButtons handleVote={(up) => this.handleVote(up)}
 			             voteScore={this.props.post.voteScore}
-			             handleDeleteEvent={() => this.handleDeleteEvent()}/>
+			             handleDeleteEvent={() => this.handleDeleteEvent()}
+			             handleEditEvent={() => this.handleEditEvent()}/>
 
 		let subTitle =
 			<div className="post-subtitle">
@@ -83,7 +90,8 @@ class SinglePost extends Component {
 function mapDispatchToProps(dispatch) {
 	return {
 		vote: (data) => dispatch(vote(data)),
-		handleDeleteEvent: (data) => dispatch(deletePost(data))
+		handleDeleteEvent: (data) => dispatch(deletePost(data)),
+		openEditPost: (data) => dispatch(openEditPost(data))
 	};
 }
 
