@@ -1,7 +1,7 @@
 import {
 	GET_CATEGORIES, SELECT_CATEGORY, GET_POSTS, VOTE_POST, SORT, OPEN_POST, GET_COMMENTS,
 	CLOSE_POST, VOTE_COMMENT, DELETE_POST, DELETE_COMMENT, OPEN_NEW_COMMENT, POST_NEW_COMMENT, OPEN_EDIT_COMMENT,
-	POST_EDIT_COMMENT
+	POST_EDIT_COMMENT, OPEN_NEW_POST, POST_NEW_POST
 } from '../actions/posts';
 import sortPosts from '../helper/sortPosts';
 import {POST_BY_DATE_NEW} from '../constants/postSortConst'
@@ -11,7 +11,8 @@ const initialselectedState = {
 	selectedCategory: null,
 	categories: [],
 	sortOrder: POST_BY_DATE_NEW,
-	openedPost: undefined
+	openedPost: undefined,
+	openNewPost: undefined
 };
 
 export function posts(state = initialselectedState, action) {
@@ -150,6 +151,23 @@ export function posts(state = initialselectedState, action) {
 					editComment: undefined
 				}
 			};
+		case OPEN_NEW_POST:
+			return {
+				...state,
+				openNewPost: action.open
+			};
+		case POST_NEW_POST:
+			let posts = [
+				...state.posts,
+				action.data
+			];
+			return {
+				...state,
+				posts: posts.sort(
+			(a,b) => sortPosts(a,b, state.sortOrder)
+				),
+				openNewPost: false
+				};
 		default:
 			return state;
 	}

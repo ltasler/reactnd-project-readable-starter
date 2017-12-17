@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Panel, Form, Col, FormControl, FormGroup, ControlLabel, Button} from 'react-bootstrap'
+import {Panel, Form, Col, FormGroup, Button} from 'react-bootstrap'
 import PropTypes from 'prop-types';
 import formGroup from '../helper/formGroup';
 

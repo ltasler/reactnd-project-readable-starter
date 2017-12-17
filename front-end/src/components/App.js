@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import TopMenu from './TopMenu';
 import Posts from './Posts';
+import NewPost from './NewPost';
 import {Col, Grid, Row} from 'react-bootstrap';
 
 class App extends Component {
@@ -17,6 +18,7 @@ class App extends Component {
 					</Col>
 					<Col sm={3}/>
 				</Row>
+				<NewPost/>
 			</Grid>
 		);
 	}

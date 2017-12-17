@@ -16,6 +16,8 @@ export const OPEN_NEW_COMMENT = 'OPEN_NEW_COMMENT';
 export const POST_NEW_COMMENT = 'POST_NEW_COMMENT';
 export const OPEN_EDIT_COMMENT = 'OPEN_EDIT_COMMENT';
 export const POST_EDIT_COMMENT = 'POST_EDIT_COMMENT';
+export const OPEN_NEW_POST = 'OPEN_NEW_POST';
+export const POST_NEW_POST = 'POST_NEW_POST';
 
 const URL = 'http://127.0.0.1:3001';
 const HEADERS = {
@@ -193,6 +195,33 @@ export function postEditComment({id, body}) {
 			dispatch({
 				type: POST_EDIT_COMMENT,
 				data:response.data
+			});
+		});
+	};
+}
+
+export function openNewPost(open) {
+	return {
+		type: OPEN_NEW_POST,
+		open: open
+	};
+}
+
+export function postNewPost({username, title, body, category}) {
+	let url = `${URL}/posts`;
+	let data = {
+		id: uuid(),
+		timestamp: new Date(Date()).getTime(),
+		title,
+		body,
+		author: username,
+		category
+	};
+	return (dispatch) => {
+		axios.post(url, data, HEADERS).then((response) => {
+			dispatch({
+				type: POST_NEW_POST,
+				data: response.data
 			});
 		});
 	};

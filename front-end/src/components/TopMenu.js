@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-import {getCategories, selectCategory, getPosts} from '../actions/posts';
+import {getCategories, selectCategory, getPosts, openNewPost} from '../actions/posts';
 import {Nav, NavItem, Navbar} from 'react-bootstrap';
 import '../styles/topMenu.css'
 
@@ -12,6 +12,10 @@ class TopMenu extends Component {
 	handlecategorySelect(name, path) {
 		this.props.selectCategory({category: name, path});
 		this.props.getPosts(name); //refresh da posts
+	}
+
+	handleOpenNewPost = () => {
+		this.props.openNewPost(true);
 	}
 
 	render() {
@@ -37,8 +41,8 @@ class TopMenu extends Component {
 						)};
 					</Nav>
 					<Nav pullRight>
-						<NavItem>
-							TODO: Create New Post
+						<NavItem onClick={() => this.handleOpenNewPost()}>
+							Create New Post
 						</NavItem>
 					</Nav>
 				</Navbar.Collapse>
@@ -58,7 +62,8 @@ function mapDispatchToProps(dispatch) {
 	return {
 		selectCategory: (data) => dispatch(selectCategory(data)),
 		getCategories: () => dispatch(getCategories()),
-		getPosts: (data) => dispatch(getPosts(data))
+		getPosts: (data) => dispatch(getPosts(data)),
+		openNewPost: (data) => dispatch(openNewPost(data))
 	};
 }
 
