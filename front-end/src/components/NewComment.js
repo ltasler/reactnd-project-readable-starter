@@ -1,29 +1,14 @@
 import React, {Component} from 'react';
 import {Panel, Form, Col, FormControl, FormGroup, ControlLabel, Button} from 'react-bootstrap'
 import PropTypes from 'prop-types';
+import formGroup from '../helper/formGroup';
 
 class NewComment extends Component {
 
 	static propTypes = {
-		handleNewCommentPost: PropTypes.func.isRequired
+		handleNewCommentPost: PropTypes.func.isRequired,
+		handleCancelNewComment: PropTypes.func.isRequired,
 	};
-
-	formGroup(id, label, type, placeHolder) {
-		return (
-			<FormGroup controlId={id}>
-			<Col componentClass={ControlLabel} sm={2}>
-				{label}
-			</Col>
-			<Col sm={10}>
-				{type === 'textarea' ?
-				<FormControl componentClass={type}
-				             placeholder={placeHolder}
-				             style={{maxWidth: '100%'}} />
-				: <FormControl type={type} placeholder={placeHolder}/>}
-			</Col>
-		</FormGroup>
-		)
-	}
 
 	handleSubmit = (e) => {
 		e.preventDefault();
@@ -36,12 +21,15 @@ class NewComment extends Component {
 		return (
 			<Panel key='newComment' header='New Comment'>
 				<Form horizontal onSubmit={(e) => this.handleSubmit(e)}>
-					{this.formGroup('formCommentUser', 'Username:', 'text', 'Your username')}
-					{this.formGroup('formCommentBody', 'Body:', 'textarea', 'A text body...')}
+					{formGroup('formCommentUser', 'Username:', 'text', 'Your username')}
+					{formGroup('formCommentBody', 'Body:', 'textarea', 'A text body...')}
 					<FormGroup>
 						<Col smOffset={2} sm={10}>
 							<Button type="submit">
 								Post Comment
+							</Button>
+							<Button onClick={() => this.props.handleCancelNewComment()}>
+								Cancel
 							</Button>
 						</Col>
 					</FormGroup>

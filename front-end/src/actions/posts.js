@@ -14,6 +14,8 @@ export const DELETE_POST = 'DELETE_POST';
 export const DELETE_COMMENT = 'DELETE_COMMENT';
 export const OPEN_NEW_COMMENT = 'OPEN_NEW_COMMENT';
 export const POST_NEW_COMMENT = 'POST_NEW_COMMENT';
+export const OPEN_EDIT_COMMENT = 'OPEN_EDIT_COMMENT';
+export const POST_EDIT_COMMENT = 'POST_EDIT_COMMENT';
 
 const URL = 'http://127.0.0.1:3001';
 const HEADERS = {
@@ -145,9 +147,10 @@ export function deleteComment(id) {
 	}
 }
 
-export function openNewComment() {
+export function openNewComment(data) {
 	return {
-		type: OPEN_NEW_COMMENT
+		type: OPEN_NEW_COMMENT,
+		open: data
 	};
 }
 
@@ -167,6 +170,30 @@ export function postNewComment({parentId, username, body}) {
 					type:POST_NEW_COMMENT,
 					data: response.data
 				});
+		});
+	};
+}
+
+export function openEditComment({id, open}) {
+	return {
+		type: OPEN_EDIT_COMMENT,
+		id: id,
+		open: open
+	};
+}
+
+export function postEditComment({id, body}) {
+	let url = `${URL}/comments/${id}`
+	let params = {
+		body: body,
+		timestamp: new Date(Date()).getTime()
+	};
+	return (dispatch) => {
+		axios.put(url, params, HEADERS).then((response) => {
+			dispatch({
+				type: POST_EDIT_COMMENT,
+				data:response.data
+			});
 		});
 	};
 }

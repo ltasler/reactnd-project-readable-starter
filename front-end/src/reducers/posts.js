@@ -1,6 +1,7 @@
 import {
 	GET_CATEGORIES, SELECT_CATEGORY, GET_POSTS, VOTE_POST, SORT, OPEN_POST, GET_COMMENTS,
-	CLOSE_POST, VOTE_COMMENT, DELETE_POST, DELETE_COMMENT, OPEN_NEW_COMMENT, POST_NEW_COMMENT
+	CLOSE_POST, VOTE_COMMENT, DELETE_POST, DELETE_COMMENT, OPEN_NEW_COMMENT, POST_NEW_COMMENT, OPEN_EDIT_COMMENT,
+	POST_EDIT_COMMENT
 } from '../actions/posts';
 import sortPosts from '../helper/sortPosts';
 import {POST_BY_DATE_NEW} from '../constants/postSortConst'
@@ -108,7 +109,7 @@ export function posts(state = initialselectedState, action) {
 				...state,
 				openedPost: {
 					...state.openedPost,
-					openNewComment: true
+					openNewComment: action.open
 				}
 			};
 		case POST_NEW_COMMENT:
@@ -128,6 +129,25 @@ export function posts(state = initialselectedState, action) {
 						action.data
 					],
 					openNewComment: false
+				}
+			};
+		case OPEN_EDIT_COMMENT:
+			return {
+				...state,
+				openedPost: {
+					...state.openedPost,
+					editComment: action.open ? action.id : undefined
+				}
+			}
+		case POST_EDIT_COMMENT:
+			return {
+				...state,
+				openedPost: {
+					...state.openedPost,
+					comments: state.openedPost.comments.map(
+						(c) => c.id === action.data.id ? action.data : c
+					),
+					editComment: undefined
 				}
 			};
 		default:

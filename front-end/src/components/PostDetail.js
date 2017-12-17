@@ -25,12 +25,16 @@ class PostDetail extends Component {
 	}
 
 	handleNewComment = () => {
-		this.props.handleNewComment();
+		this.props.handleNewComment(true);
 	}
 
 	handleNewCommentPost = (data) => {
 		let parentId = this.props.openedPost.id;
 		this.props.handleNewCommentPost({parentId, ...data});
+	}
+
+	handleCancelNewCommentPost = () => {
+		this.props.handleNewComment(false);
 	}
 
 	render() {
@@ -42,6 +46,10 @@ class PostDetail extends Component {
 		let comments = 'There are no comments.';
 		if(this.props.openedPost.comments && this.props.openedPost.comments.length > 0)
 			comments = this.props.openedPost.comments.map((x) =>
+				x.id === this.props.openedPost.editComment ?
+					<PostComment key={x.id} comment={x}
+					             handleVote={(vote, id) => this.handleCommentVote(vote, id)}
+					             edit/> :
 				<PostComment key={x.id} comment={x}
 				             handleVote={(vote, id) => this.handleCommentVote(vote, id)}/>
 			);
@@ -60,7 +68,8 @@ class PostDetail extends Component {
 		if(this.props.openedPost.openNewComment) {
 			body=
 				<Modal.Body>
-				<NewComment handleNewCommentPost={(data) => this.handleNewCommentPost(data)}/>
+				<NewComment handleNewCommentPost={(data) => this.handleNewCommentPost(data)}
+				            handleCancelNewComment={() => this.handleCancelNewCommentPost()}/>
 				<div id="commentContainer" className="comment-container">
 					{comments}
 				</div>
@@ -95,7 +104,7 @@ function mapDispatchToProps(dispatch) {
 		openComments: (data) => dispatch(getComments(data)),
 		closePost: () => dispatch(closePost()),
 		voteComment: (data) => dispatch(voteComment(data)),
-		handleNewComment: () => dispatch(openNewComment()),
+		handleNewComment: (data) => dispatch(openNewComment(data)),
 		handleNewCommentPost: (data) => dispatch(postNewComment(data))
 	};
 }
