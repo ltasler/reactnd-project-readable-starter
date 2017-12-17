@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Modal} from 'react-bootstrap';
-import {getComments, closePost, voteComment} from '../actions/posts';
+import {Modal, Button, Glyphicon} from 'react-bootstrap';
+import {getComments, closePost, voteComment, openNewComment, postNewComment} from '../actions/posts';
 import SinglePost from './SinglePost';
 import PostComment from './PostComment';
+import NewComment from './NewComment';
 import '../styles/postDetail.css'
 
 class PostDetail extends Component {
@@ -23,6 +24,15 @@ class PostDetail extends Component {
 		this.props.voteComment({vote, id});
 	}
 
+	handleNewComment = () => {
+		this.props.handleNewComment();
+	}
+
+	handleNewCommentPost = (data) => {
+		let parentId = this.props.openedPost.id;
+		this.props.handleNewCommentPost({parentId, ...data});
+	}
+
 	render() {
 		let showModal = this.props.openedPost ? true : false;
 		if(!showModal)
@@ -35,6 +45,27 @@ class PostDetail extends Component {
 				<PostComment key={x.id} comment={x}
 				             handleVote={(vote, id) => this.handleCommentVote(vote, id)}/>
 			);
+
+		let body =
+			<Modal.Body>
+				<Button className="pull-right"
+				        onClick={() => this.handleNewComment()}>
+					New <Glyphicon glyph="comment"/>
+				</Button>
+				<div id="commentContainer" className="comment-container">
+					{comments}
+				</div>
+			</Modal.Body>
+
+		if(this.props.openedPost.openNewComment) {
+			body=
+				<Modal.Body>
+				<NewComment handleNewCommentPost={(data) => this.handleNewCommentPost(data)}/>
+				<div id="commentContainer" className="comment-container">
+					{comments}
+				</div>
+			</Modal.Body>
+		}
 		
 		return (
 			<div id="postDetailContainer">
@@ -43,14 +74,14 @@ class PostDetail extends Component {
 						<SinglePost post={post} isDetail/>
 						Comments:
 					</Modal.Header>
-					<Modal.Body>
-						{comments}
-					</Modal.Body>
+					{body}
 				</Modal>
 			</div>
 		);
 	}
 }
+
+
 
 function mapStateToProps({posts}) {
 	return {
@@ -63,7 +94,9 @@ function mapDispatchToProps(dispatch) {
 	return {
 		openComments: (data) => dispatch(getComments(data)),
 		closePost: () => dispatch(closePost()),
-		voteComment: (data) => dispatch(voteComment(data))
+		voteComment: (data) => dispatch(voteComment(data)),
+		handleNewComment: () => dispatch(openNewComment()),
+		handleNewCommentPost: (data) => dispatch(postNewComment(data))
 	};
 }
 

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import uuid from 'uuid';
 
 export const SELECT_CATEGORY = 'SELECT_CATEGORY';
 export const GET_CATEGORIES = 'GET_CATEGORIES';
@@ -11,6 +12,8 @@ export const CLOSE_POST = 'CLOSE_POST';
 export const VOTE_COMMENT = 'VOTE_COMMENT';
 export const DELETE_POST = 'DELETE_POST';
 export const DELETE_COMMENT = 'DELETE_COMMENT';
+export const OPEN_NEW_COMMENT = 'OPEN_NEW_COMMENT';
+export const POST_NEW_COMMENT = 'POST_NEW_COMMENT';
 
 const URL = 'http://127.0.0.1:3001';
 const HEADERS = {
@@ -134,11 +137,36 @@ export function deleteComment(id) {
 	return (dispatch) => {
 		axios.delete(url, HEADERS)
 			.then((response) => {
-			console.log(response);
 			dispatch({
 				type: DELETE_COMMENT,
 				data: response.data
 			});
 		});
 	}
+}
+
+export function openNewComment() {
+	return {
+		type: OPEN_NEW_COMMENT
+	};
+}
+
+export function postNewComment({parentId, username, body}) {
+	let url = `${URL}/comments`
+	let data = {
+		id: uuid(),
+		timestamp: new Date(Date()).getTime(),
+		body: body,
+		author: username,
+		parentId: parentId,
+	}
+	return (dispatch) => {
+		axios.post(url, data, HEADERS)
+			.then((response) => {
+				dispatch({
+					type:POST_NEW_COMMENT,
+					data: response.data
+				});
+		});
+	};
 }

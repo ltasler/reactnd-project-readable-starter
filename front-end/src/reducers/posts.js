@@ -1,6 +1,6 @@
 import {
 	GET_CATEGORIES, SELECT_CATEGORY, GET_POSTS, VOTE_POST, SORT, OPEN_POST, GET_COMMENTS,
-	CLOSE_POST, VOTE_COMMENT, DELETE_POST, DELETE_COMMENT
+	CLOSE_POST, VOTE_COMMENT, DELETE_POST, DELETE_COMMENT, OPEN_NEW_COMMENT, POST_NEW_COMMENT
 } from '../actions/posts';
 import sortPosts from '../helper/sortPosts';
 import {POST_BY_DATE_NEW} from '../constants/postSortConst'
@@ -101,6 +101,33 @@ export function posts(state = initialselectedState, action) {
 					comments: state.openedPost.comments.map(
 						(c) => c.id === action.data.id ? action.data : c
 					)
+				}
+			};
+		case OPEN_NEW_COMMENT:
+			return {
+				...state,
+				openedPost: {
+					...state.openedPost,
+					openNewComment: true
+				}
+			};
+		case POST_NEW_COMMENT:
+			return {
+				...state,
+				posts: state.posts.map(
+					(p) => {
+						if(p.id === action.data.parentId)
+							p.commentCount++;
+						return p;
+					}
+				),
+				openedPost: {
+					...state.openedPost,
+					comments: [
+						...state.openedPost.comments,
+						action.data
+					],
+					openNewComment: false
 				}
 			};
 		default:
