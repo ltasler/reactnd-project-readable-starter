@@ -41,6 +41,11 @@ class PostDetail extends Component {
 		let showModal = this.props.openedPost ? true : false;
 		if(!showModal)
 			return '';
+
+		let commentCount = 0;
+		if(this.props.openedPost.comments)
+			commentCount = this.props.openedPost.comments.length;
+		console.log(commentCount);
 		
 		let post = this.props.posts.find((x) => x.id === this.props.openedPost.id);
 		let comments = 'There are no comments.';
@@ -81,7 +86,7 @@ class PostDetail extends Component {
 				<Modal show={showModal} onHide={() => this.handleClose()}>
 					<Modal.Header closeButton className="post-detail-header">
 						<SinglePost post={post} isDetail/>
-						Comments:
+						{commentCount} comments:
 					</Modal.Header>
 					{body}
 				</Modal>
