@@ -17,6 +17,7 @@ const initialselectedState = {
 };
 
 export function posts(state = initialselectedState, action) {
+	console.log(state);
 	switch(action.type) {
 		case SELECT_CATEGORY:
 			return {

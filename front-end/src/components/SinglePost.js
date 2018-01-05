@@ -34,13 +34,11 @@ class SinglePost extends Component {
 		let showDeleted = this.props.showDeleted;
 		if((post.deleted && !showDeleted) || !post)
 			return '';
-		let postButtons = !this.props.isDetail ?
+		let postButtons =
 			<PostButtons handleVote={(up) => this.handleVote(up)}
 			             voteScore={this.props.post.voteScore}
 			             handleOpenPostDetail={() => this.props.handleOpenPostDetail(this.props.post.id)}
-			             commentCount={this.props.post.commentCount}/> :
-			<PostButtons handleVote={(up) => this.handleVote(up)}
-			             voteScore={this.props.post.voteScore}
+			             commentCount={this.props.post.commentCount}
 			             handleDeleteEvent={() => this.handleDeleteEvent()}
 			             handleEditEvent={() => this.handleEditEvent()}/>
 
