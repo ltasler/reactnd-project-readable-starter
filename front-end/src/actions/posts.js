@@ -1,5 +1,6 @@
 import axios from 'axios';
 import uuid from 'uuid';
+import {push} from 'react-router-redux';
 
 export const SELECT_CATEGORY = 'SELECT_CATEGORY';
 export const GET_CATEGORIES = 'GET_CATEGORIES';
@@ -30,6 +31,10 @@ const HEADERS = {
 
 export function selectCategory({category, path}) {
 	return (dispatch) => {
+		if(path)
+			dispatch(push(`/category/${path}`))
+		else
+			dispatch(push('/'));
 		dispatch({
 			type: SELECT_CATEGORY,
 			selectCategory: category
